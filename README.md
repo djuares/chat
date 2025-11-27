@@ -1,7 +1,8 @@
-#Backend
+# Backend
 
+```bash
 iex -S mix
 alias Chat.User
 user=User.add(user, :contacts, "name") 
-
-#Frontend
+```
+# Frontend
