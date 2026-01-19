@@ -1,7 +1,7 @@
 # Backend
 
 # Frontend
-
+Interface with Phoenix
  ```bash
 cd chat_web
  ```
@@ -9,4 +9,7 @@ cd chat_web
 mix clean
 mix compile
 mix phx.server
+ ```
+ ```bash
+http://localhost:4000/
  ```
