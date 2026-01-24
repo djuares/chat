@@ -1,6 +1,9 @@
 defmodule ChatEngine.GenServer.User do
   use GenServer
 
+  alias ChatEngine.GenServer.Room
+
+
   def start_link(username) do
     GenServer.start_link(__MODULE__, username, name: via_tuple(username))
   end
@@ -22,6 +25,7 @@ defmodule ChatEngine.GenServer.User do
   end
 
 
+  # ----------------- Callbacks ----------------- #
 
   @impl GenServer
   def init(username) do
@@ -36,7 +40,7 @@ defmodule ChatEngine.GenServer.User do
 
   @impl GenServer
   def handle_cast({:send_message, room_name, message}, state) do
-    ChatEngine.GenServer.Room.new_message(room_name, state.username, message)
+    Room.new_message(room_name, state.username, message)
     {:noreply, state}
   end
 

@@ -13,9 +13,12 @@ defmodule ChatEngine.GenServer.Room do
     GenServer.cast(via_tuple(room_name), {:new_message, username, message})
   end
 
+  def get_messages(room_name) do
+    GenServer.call(via_tuple(room_name), :get_messages)
+  end
 
 
-
+  # ----------------- Callbacks ----------------- #
 
   @impl GenServer
   def init(room_name) do
@@ -36,18 +39,25 @@ defmodule ChatEngine.GenServer.Room do
     {:reply, :ok, %{state | users: new_users}}
   end
 
+  @impl GenServer
+  def handle_call(:get_messages, _from, state) do
+    {:reply, state.messages, state}
+  end
+
   defp add_message(messages, new_message) do
     case length(messages) do
-      10 ->
+      length when length == 10 ->
         [_oldest | rest] = messages
         rest ++ [new_message]
-      _  ->
+      _other  ->
         messages ++ [new_message]
     end
   end
 
   defp send_notifications(users, room_name, message) do
-    Enum.each(users, fn username ->
+    users
+    |> Enum.filter(fn username -> username != elem(message, 0) end)
+    |> Enum.each(fn username ->
       ChatEngine.GenServer.User.receive_message(username, room_name, message)
     end)
   end
