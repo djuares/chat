@@ -14,11 +14,22 @@ defmodule ChatWeb.Router do
     plug :accepts, ["json"]
   end
 
+
   scope "/", ChatWeb do
-    pipe_through :browser
+  pipe_through :browser
 
     get "/", PageController, :home
-  end
+
+    get "/groups", GroupController, :index
+    get "/groups/new", GroupController, :new
+    post "/groups", GroupController, :create
+    get "/groups/:id", GroupController, :show
+
+    post "/groups/:id/members", GroupController, :add_member
+    delete "/groups/:id/members/:username", GroupController, :remove_member
+end
+
+
 
   # Other scopes may use custom stacks.
   # scope "/api", ChatWeb do

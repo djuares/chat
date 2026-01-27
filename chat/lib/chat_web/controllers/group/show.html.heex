@@ -1,0 +1,22 @@
+<h1><%= @group.name %></h1>
+
+<p><strong>Descripción:</strong> <%= @group.description %></p>
+
+<h2>Miembros</h2>
+<ul>
+  <%= for member <- @members do %>
+    <li>
+      <%= member.username %>
+
+      <%= link "Remover",
+        to: ~p"/groups/#{@group.id}/members/#{member.username}",
+        method: :delete,
+        data: [confirm: "¿Seguro que querés eliminar este miembro?"]
+      %>
+    </li>
+  <% end %>
+</ul>
+
+<p>
+  <%= link "Volver a la lista", to: ~p"/groups" %>
+</p>

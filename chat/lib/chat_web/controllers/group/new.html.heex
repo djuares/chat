@@ -1,0 +1,12 @@
+<h1>Crear grupo</h1>
+
+<.form
+  for={@changeset}
+  action={~p"/groups"}
+  :let={f}
+>
+  <.input field={f[:name]} label="Nombre" />
+  <.input field={f[:description]} type="textarea" label="Descripción" />
+
+  <.button>Crear</.button>
+</.form>

@@ -1,26 +1,21 @@
 defmodule Chat.Group do
   use Ecto.Schema
-
   import Ecto.Changeset
 
   @primary_key false
   schema "groups" do
-    belongs_to(:admin, Chat.User,
-      foreign_key: :admin_id,
-      references: :username,
-      define_field: false
-    )
-
-    field(:admin_id, :string)
-    field(:name, :string)
     field(:id, :string, primary_key: true)
+    field(:name, :string)
+    field(:description, :string)
 
     timestamps()
   end
 
-  def changeset(data, params \\ %{}) do
-    data
-    |> cast(params, [:id, :admin_id, :name])
+  @doc false
+  def changeset(group, params \\ %{}) do
+    group
+    |> cast(params, [:id, :name, :description])
+    |> validate_required([:id, :name])
     |> unique_constraint([:id])
   end
 
@@ -30,14 +25,14 @@ defmodule Chat.Group do
 
     changeset =
       Chat.Group.changeset(%Chat.Group{}, %{
-        "admin_id" => username,
         "id" => group_id,
         "name" => group_name
       })
 
     group = Chat.Repo.insert!(changeset)
-    user = Chat.Repo.get!(Chat.User, username)
-    Chat.GroupMember.add_membership(user, group, true)
+
+    # Agregar el creador como miembro (por ejemplo rol admin)
+    Chat.GroupMember.add_membership(group.id, username, "admin")
 
     group
   end

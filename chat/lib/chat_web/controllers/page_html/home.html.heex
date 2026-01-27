@@ -1,9 +1,12 @@
-<div style="padding: 2rem">
-  <h1>Hola desde Phoenix 👋</h1>
-  <p>Si ves esto, el render funciona.</p>
+<h1>Bienvenido al Chat 👋</h1>
 
-  <ul id="messages" style="list-style: none; padding: 0;"></ul>
+<p>¿Qué querés hacer?</p>
 
-  <input type="text" id="message-input" placeholder="Escribe un mensaje..." />
-  <button id="send">Enviar</button>
-</div>
+<ul>
+  <li>
+    <.link href={~p"/groups"}>Ver grupos</.link>
+  </li>
+  <li>
+    <.link href={~p"/groups/new"}>Crear un grupo</.link>
+  </li>
+</ul>

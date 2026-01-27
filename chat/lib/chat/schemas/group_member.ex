@@ -43,4 +43,13 @@ defmodule Chat.GroupMember do
     )
     |> Chat.Repo.delete_all()
   end
+  def get_all_members(group_id) do
+    import Ecto.Query
+
+    from(m in Chat.GroupMember,
+      where: m.group_id == ^group_id
+    )
+    |> Chat.Repo.all()
+  end
+
 end
