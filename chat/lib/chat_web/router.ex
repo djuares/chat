@@ -8,6 +8,7 @@ defmodule ChatWeb.Router do
     plug :put_root_layout, html: {ChatWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug ChatWeb.Plugs.CurrentUser
   end
 
   pipeline :api do
@@ -18,8 +19,9 @@ defmodule ChatWeb.Router do
   scope "/", ChatWeb do
   pipe_through :browser
 
+    #HOME
     get "/", PageController, :home
-
+    #GROUPS
     get "/groups", GroupController, :index
     get "/groups/new", GroupController, :new
     post "/groups", GroupController, :create
@@ -27,7 +29,15 @@ defmodule ChatWeb.Router do
 
     post "/groups/:id/members", GroupController, :add_member
     delete "/groups/:id/members/:username", GroupController, :remove_member
-end
+    #Autentication
+    get "/login", AuthController, :new
+    post "/login", AuthController, :create
+
+    get "/register", AuthController, :new_user
+    post "/register", AuthController, :create_user
+
+    delete "/logout", AuthController, :delete
+  end
 
 
 

@@ -45,5 +45,10 @@ defp deps do
   ]
 end
 
+defp aliases do
+  [
+    setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"]
+  ]
+end
 
 end
