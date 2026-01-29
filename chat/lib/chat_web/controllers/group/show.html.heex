@@ -1,22 +1,27 @@
-<h1><%= @group.name %></h1>
+<h2><%= @group.name %></h2>
 
-<p><strong>Descripción:</strong> <%= @group.description %></p>
+<hr/>
 
-<h2>Miembros</h2>
-<ul>
-  <%= for member <- @members do %>
-    <li>
-      <%= member.username %>
+<h3>Mensajes</h3>
 
-      <%= link "Remover",
-        to: ~p"/groups/#{@group.id}/members/#{member.username}",
-        method: :delete,
-        data: [confirm: "¿Seguro que querés eliminar este miembro?"]
-      %>
-    </li>
+<div id="messages">
+  <%= for msg <- @messages do %>
+    <p>
+      <strong><%= msg.sender_user.username %>:</strong>
+      <%= msg.content %>
+      <small>
+        (<%= msg.inserted_at %>)
+      </small>
+    </p>
   <% end %>
-</ul>
+</div>
 
-<p>
-  <%= link "Volver a la lista", to: ~p"/groups" %>
-</p>
+<hr/>
+
+<h3>Enviar mensaje</h3>
+
+<.form for={%{}} action={~p"/groups/#{@group.id}/messages"} method="post">
+  <textarea name="message[content]" required></textarea>
+  <br/>
+  <button type="submit">Enviar</button>
+</.form>

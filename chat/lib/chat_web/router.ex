@@ -22,13 +22,14 @@ defmodule ChatWeb.Router do
     #HOME
     get "/", PageController, :home
     #GROUPS
-    get "/groups", GroupController, :index
-    get "/groups/new", GroupController, :new
-    post "/groups", GroupController, :create
-    get "/groups/:id", GroupController, :show
+    resources "/groups", GroupController do
+      post "/members", GroupController, :add_member
+      delete "/members/:username", GroupController, :remove_member
 
-    post "/groups/:id/members", GroupController, :add_member
-    delete "/groups/:id/members/:username", GroupController, :remove_member
+      post "/messages", GroupMessageController, :create
+    end
+
+
     #Autentication
     get "/login", AuthController, :new
     post "/login", AuthController, :create

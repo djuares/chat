@@ -4,10 +4,23 @@ defmodule ChatWeb.GroupController do
   alias Chat.{Repo, Group, GroupMember}
 
   # index
+  import Ecto.Query
+
   def index(conn, _params) do
-    groups = Repo.all(Group)
+    user = conn.assigns.current_user
+
+    groups =
+      from(g in Group,
+        join: gm in GroupMember,
+        on: gm.group_id == g.id,
+        where: gm.username == ^user.username,
+        select: g
+      )
+      |> Repo.all()
+
     render(conn, ChatWeb.GroupHTML, :index, groups: groups)
   end
+
 
   # new
   def new(conn, _params) do
@@ -16,21 +29,13 @@ defmodule ChatWeb.GroupController do
   end
 
   # create
-  def create(conn, %{"group" => group_params}) do
-    group_params =
-      Map.put(group_params, "id", Ecto.UUID.generate())
+  def create(conn, %{"group" => %{"name" => name}}) do
+    user = conn.assigns.current_user
+    Chat.Group.create!(name, user.username)
 
-    changeset = Group.changeset(%Group{}, group_params)
-
-    case Repo.insert(changeset) do
-      {:ok, group} ->
-        conn
-        |> put_flash(:info, "Grupo creado correctamente")
-        |> redirect(to: ~p"/groups")
-
-      {:error, changeset} ->
-        render(conn, ChatWeb.GroupHTML, :new, changeset: changeset)
-    end
+    conn
+    |> put_flash(:info, "Grupo creado correctamente")
+    |> redirect(to: ~p"/groups")
   end
 
 
@@ -38,10 +43,13 @@ defmodule ChatWeb.GroupController do
   def show(conn, %{"id" => id}) do
     group = Repo.get!(Group, id)
     members = GroupMember.get_all_members(group.id)
+    messages = Chat.GroupMessages.list_messages(group.id)
 
     render(conn, ChatWeb.GroupHTML, :show,
       group: group,
-      members: members
+      members: members,
+      messages: messages
     )
   end
+
 end

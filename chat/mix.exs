@@ -42,6 +42,7 @@ defp deps do
     {:bandit, "~> 1.6"},
     {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
     {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
+    {:nanoid, "~> 2.1"}
   ]
 end
 
