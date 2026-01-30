@@ -1,11 +1,15 @@
-<h1>Grupos</h1>
-
-<%= link "Crear nuevo grupo", to: ~p"/groups/new" %>
-
-<ul>
+<br>
+<h1 class="text-primary font-bold">Grupos 👥​</h1>
+<br>
+<!-- Botón primario -->
+<%= link "Crear nuevo grupo", to: ~p"/groups/new",
+  class: "btn bg-primary text-primary-content rounded-lg w-full" %>
+<!-- Lista de grupos con botones secundarios -->
+<ul class="flex flex-col space-y-3 mt-4 w-full">
   <%= for group <- @groups do %>
     <li>
-      <%= link group.name, to: ~p"/groups/#{group.id}" %>
+      <%= link group.name, to: ~p"/groups/#{group.id}",
+        class: "btn bg-secondary text-secondary-content border border-gray-300 rounded-lg w-full" %>
     </li>
   <% end %>
 </ul>

@@ -1,16 +1,26 @@
-<div class="flex flex-col items-center justify-center min-h-screen text-white text-center">
-  <h1 class="text-4xl font-bold mb-6">Bienvenido al Chat 👋</h1>
-  <p class="text-lg mb-8">¿Qué querés hacer?</p>
-  <ul class="space-y-4">
+<div class="flex flex-col items-center justify-center min-h-screen text-base-content text-center px-6 w-full">
+
+  <!-- Título -->
+  <h1 class="text-4xl font-bold mb-6 w-full text-center">
+    Bienvenido al Chat 👋
+  </h1>
+  <!-- Pregunta -->
+  <p class="text-lg mb-8 w-full text-center">
+    ¿Qué querés hacer?
+  </p>
+
+  <!-- Botones -->
+  <ul class="flex flex-col space-y-4 w-full max-w-sm">
     <li>
-      <.link href={~p"/login"} class="bg-white text-blue-500 font-semibold py-2 px-6 rounded-lg shadow hover:bg-gray-100 transition">
+      <.link href={~p"/login"} class="btn w-full bg-primary text-primary-content rounded-lg">
         Iniciar sesión
       </.link>
     </li>
     <li>
-      <.link href={~p"/register"} class="bg-white text-blue-500 font-semibold py-2 px-6 rounded-lg shadow hover:bg-gray-100 transition">
+      <.link href={~p"/register"} class="btn w-full bg-primary text-primary-content rounded-lg">
         Crear usuario
       </.link>
     </li>
   </ul>
+
 </div>

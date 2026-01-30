@@ -1,27 +1,42 @@
-<h2><%= @group.name %></h2>
-
+<br>
+<h1 class="text-primary font-bold"> 💬​​</h1>
+<br>
+<h2 class="font-bold text-base-content">
+  <%=  @group.name %> 
+</h2>
+​
+<br>
 <hr/>
-
-<h3>Mensajes</h3>
-
-<div id="messages">
+<div id="messages" class="msg-box font-sans space-y-2">
   <%= for msg <- @messages do %>
-    <p>
-      <strong><%= msg.sender_user.username %>:</strong>
-      <%= msg.content %>
-      <small>
+    <div class="bg-white p-2 rounded shadow-sm w-full">
+      <p class="text-base text-base-content">
+        <strong><%= msg.sender_user.username %>:</strong>
+        <%= msg.content %>
+      </p>
+      <small class="text-sm text-gray-500 block mt-1">
         (<%= msg.inserted_at %>)
       </small>
-    </p>
+    </div>
   <% end %>
 </div>
 
 <hr/>
+<br>
 
-<h3>Enviar mensaje</h3>
+<.form for={%{}} action={~p"/groups/#{@group.id}/messages"} method="post" class="space-y-2">
 
-<.form for={%{}} action={~p"/groups/#{@group.id}/messages"} method="post">
-  <textarea name="message[content]" required></textarea>
-  <br/>
-  <button type="submit">Enviar</button>
+  <textarea
+    name="message[content]"
+    required
+    class="input bg-base-200 text-base-content w-full"
+    placeholder="Escribe tu mensaje..."
+  ></textarea>
+  <!-- Botón ocupa toda la línea -->
+  <div class="form-control mt-2">
+    <button type="submit" class="btn w-full bg-primary text-primary-content">
+      Enviar
+    </button>
+  </div>
+
 </.form>

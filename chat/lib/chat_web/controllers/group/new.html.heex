@@ -1,12 +1,31 @@
-<h1>Crear grupo</h1>
+<!-- Contenedor principal: ocupa toda la pantalla y centra su contenido -->
+<div class="h-screen flex items-center justify-center bg-base-100">
 
-<.form
-  for={@changeset}
-  action={~p"/groups"}
-  :let={f}
->
-  <.input field={f[:name]} label="Nombre" />
-  <.input field={f[:description]} type="textarea" label="Descripción" />
+  <!-- Caja del formulario -->
+  <div class="w-full max-w-md bg-base-100 shadow-md rounded-lg p-6 mx-4">
 
-  <.button>Crear</.button>
-</.form>
+    <!-- Título -->
+    <h1 class="text-2xl font-bold mb-4 text-base-content text-center">
+      Crear grupo
+    </h1>
+
+    <!-- Formulario -->
+    <.form for={@changeset} action={~p"/groups"} :let={f} class="space-y-4">
+
+      <!-- Nombre -->
+      <.input field={f[:name]} label="Nombre" class="input bg-base-200 text-base-content w-full" />
+
+      <!-- Descripción -->
+      <.input field={f[:description]} type="textarea" label="Descripción" class="input bg-base-200 text-base-content w-full" />
+
+      <!-- Botón Crear -->
+      <div class="form-control mt-4">
+        <.button class="btn w-full bg-primary text-primary-content">
+          Crear
+        </.button>
+      </div>
+
+    </.form>
+
+  </div>
+</div>

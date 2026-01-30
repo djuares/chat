@@ -1,5 +1,5 @@
 {application,chat,
-             [{config_mtime,1769714430},
+             [{config_mtime,1769727910},
               {compile_env,[{chat,['Elixir.ChatWeb.Endpoint',code_reloader],
                                   {ok,true}},
                             {chat,['Elixir.ChatWeb.Endpoint',debug_errors],
