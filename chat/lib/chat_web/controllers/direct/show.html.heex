@@ -1,0 +1,47 @@
+<br>
+<h1 class="text-primary font-bold">💬 Chat directo</h1>
+<br>
+
+<h2 class="font-bold text-base-content">
+  <%= @other_user %>
+</h2>
+
+<br>
+<hr/>
+
+<div id="messages" class="msg-box font-sans space-y-2">
+  <%= for msg <- @messages do %>
+    <div class="bg-white p-2 rounded shadow-sm w-full">
+      <p class="text-base text-base-content">
+        <strong><%= msg.sender_user.username %>:</strong>
+        <%= msg.content %>
+      </p>
+      <small class="text-sm text-gray-500 block mt-1">
+        (<%= msg.inserted_at %>)
+      </small>
+    </div>
+  <% end %>
+</div>
+
+<hr/>
+<br>
+
+<.form
+  for={%{}}
+  action={~p"/groups/#{@group.id}/messages"}
+  method="post"
+  class="space-y-2"
+>
+  <textarea
+    name="message[content]"
+    required
+    class="input bg-base-200 text-base-content w-full"
+    placeholder="Escribí tu mensaje..."
+  ></textarea>
+
+  <div class="form-control mt-2">
+    <button type="submit" class="btn w-full bg-primary text-primary-content">
+      Enviar
+    </button>
+  </div>
+</.form>

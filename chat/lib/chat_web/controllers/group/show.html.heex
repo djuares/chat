@@ -5,6 +5,36 @@
   <%=  @group.name %> 
 </h2>
 ​
+<div class="mt-4 mb-4">
+
+  <details class="bg-base-200 rounded-lg p-3">
+    <summary class="cursor-pointer font-semibold text-primary">
+      ➕ Agregar miembro
+    </summary>
+
+    <.form
+      action={~p"/home/groups/#{@group.id}/members"}
+      method="post"
+      class="mt-3 space-y-2"
+    >
+      <input type="hidden" name="group_id" value={@group.id} />
+
+      <input
+        type="text"
+        name="username"
+        placeholder="Username del usuario"
+        required
+        class="input bg-base-100 text-base-content w-full"
+      />
+
+      <button class="btn btn-primary w-full">
+        Agregar
+      </button>
+    </.form>
+  </details>
+
+</div>
+
 <br>
 <hr/>
 <div id="messages" class="msg-box font-sans space-y-2">
@@ -24,7 +54,7 @@
 <hr/>
 <br>
 
-<.form for={%{}} action={~p"/groups/#{@group.id}/messages"} method="post" class="space-y-2">
+<.form for={%{}} action={~p"/home/groups/#{@group.id}/messages"} method="post" class="space-y-2">
 
   <textarea
     name="message[content]"

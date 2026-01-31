@@ -13,10 +13,13 @@ defmodule ChatWeb.GroupController do
       from(g in Group,
         join: gm in GroupMember,
         on: gm.group_id == g.id,
-        where: gm.username == ^user.username,
+        where:
+          gm.username == ^user.username and
+          (is_nil(g.description) or g.description != "direct"),
         select: g
       )
       |> Repo.all()
+
 
     render(conn, ChatWeb.GroupHTML, :index, groups: groups)
   end
@@ -35,7 +38,7 @@ defmodule ChatWeb.GroupController do
 
     conn
     |> put_flash(:info, "Grupo creado correctamente")
-    |> redirect(to: ~p"/groups")
+    |> redirect(to: ~p"/home/groups")
   end
 
 
@@ -51,5 +54,19 @@ defmodule ChatWeb.GroupController do
       messages: messages
     )
   end
+
+  def add_member(conn, %{"group_id" => group_id, "username" => username}) do
+    IO.inspect(group_id, label: "GROUP ID")
+    IO.inspect(username, label: "USERNAME")
+
+    # Agregar miembro
+    Chat.GroupMember.add_membership(group_id, username, "member")
+
+    conn
+    |> put_flash(:info, "Miembro agregado correctamente")
+    |> redirect(to: ~p"/home/groups/#{group_id}")
+  end
+
+
 
 end

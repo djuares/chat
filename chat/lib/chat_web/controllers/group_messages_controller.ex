@@ -18,7 +18,7 @@ defmodule ChatWeb.GroupMessageController do
     })
     |> Chat.Repo.insert()
 
-    redirect(conn, to: ~p"/groups/#{group_id}")
+    redirect(conn, to: ~p"/home/groups/#{group_id}")
   end
 
 end

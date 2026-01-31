@@ -19,15 +19,22 @@ defmodule ChatWeb.Router do
   scope "/", ChatWeb do
   pipe_through :browser
 
+  get "/", PageController, :home
+
     #HOME
-    get "/", PageController, :home
+    get "/home", HomeController, :index
+
+
     #GROUPS
-    resources "/groups", GroupController do
+    resources "/home/groups", GroupController do
       post "/members", GroupController, :add_member
       delete "/members/:username", GroupController, :remove_member
 
       post "/messages", GroupMessageController, :create
     end
+
+    #DIRECT MESSAGES
+    resources "/home/directs", DirectController, only: [:index, :new, :create, :show]
 
 
     #Autentication

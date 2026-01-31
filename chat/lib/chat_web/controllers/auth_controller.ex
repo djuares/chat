@@ -20,7 +20,7 @@ defmodule ChatWeb.AuthController do
             conn
             |> put_session(:current_user, user.username)
             |> put_flash(:info, "Bienvenido #{user.name}!")
-            |> redirect(to: "/groups")
+            |> redirect(to: "/home")
           else
             conn
             |> put_flash(:error, "Contraseña incorrecta")

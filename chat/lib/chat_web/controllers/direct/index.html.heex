@@ -1,0 +1,18 @@
+<br>
+<h1 class="text-primary font-bold">Chats Directos 👥</h1>
+<br>
+
+<%= link "Crear nuevo chat",
+  to: ~p"/home/directs/new",
+  class: "btn bg-primary text-primary-content rounded-lg w-full" %>
+
+<ul class="flex flex-col space-y-3 mt-4 w-full">
+  <%= for direct <- @directs do %>
+    <li>
+      <%= link direct.name,
+        to: ~p"/home/directs/#{direct.id}",
+        class: "btn bg-secondary text-secondary-content border border-gray-300 rounded-lg w-full" %>
+    </li>
+  <% end %>
+</ul>
+

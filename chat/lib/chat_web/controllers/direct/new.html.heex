@@ -6,17 +6,15 @@
 
     <!-- Título -->
     <h1 class="text-2xl font-bold mb-4 text-base-content text-center">
-      Crear grupo
+      Crear chat
     </h1>
 
     <!-- Formulario -->
-    <.form for={@changeset} action={~p"/home/groups"} :let={f} class="space-y-4">
+    <.form for={@changeset} action={~p"/home/directs"} :let={f} class="space-y-4">
 
       <!-- Nombre -->
-      <.input field={f[:name]} label="Nombre" class="input bg-base-200 text-base-content w-full" />
+      <.input field={f[:name]} label="Username destinatario" class="input bg-base-200 text-base-content w-full" />
 
-      <!-- Descripción -->
-      <.input field={f[:description]} type="textarea" label="Descripción" class="input bg-base-200 text-base-content w-full" />
 
       <!-- Botón Crear -->
       <div class="form-control mt-4">
