@@ -15,17 +15,15 @@ defmodule ChatWeb.Router do
     plug :accepts, ["json"]
   end
 
-
   scope "/", ChatWeb do
-  pipe_through :browser
+    pipe_through :browser
 
-  get "/", PageController, :home
+    get "/", PageController, :home
 
-    #HOME
+    # HOME
     get "/home", HomeController, :index
 
-
-    #GROUPS
+    # GROUPS
     resources "/home/groups", GroupController do
       post "/members", GroupController, :add_member
       delete "/members/:username", GroupController, :remove_member
@@ -33,11 +31,15 @@ defmodule ChatWeb.Router do
       post "/messages", GroupMessageController, :create
     end
 
-    #DIRECT MESSAGES
+    # DIRECT MESSAGES
     resources "/home/directs", DirectController, only: [:index, :new, :create, :show]
 
+    # CONTACTS
+    resources "/home/contacts", ContactsController, only: [:index]
+    post "/home/contacts", ContactsController, :create
+    post "/home/contacts/:contact_username/delete", ContactsController, :delete
 
-    #Autentication
+    # Autentication
     get "/login", AuthController, :new
     post "/login", AuthController, :create
 
@@ -46,8 +48,6 @@ defmodule ChatWeb.Router do
 
     delete "/logout", AuthController, :delete
   end
-
-
 
   # Other scopes may use custom stacks.
   # scope "/api", ChatWeb do

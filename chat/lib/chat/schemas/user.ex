@@ -15,6 +15,11 @@ defmodule Chat.User do
     field(:name, :string)
     field(:description, :string)
     field(:last_online, :utc_datetime_usec, default: DateTime.utc_now())
+
+      many_to_many :contacts, Chat.User,
+        join_through: Chat.Contacts,
+        join_keys: [user: :username, contact: :username]
+
     timestamps()
   end
 

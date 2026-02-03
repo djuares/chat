@@ -1,0 +1,51 @@
+<div class="flex flex-col p-6 space-y-6 w-full">
+  <div class="flex flex-col space-y-4">
+    <h1 class="text-primary text-2xl font-bold">Contactos 👥</h1>
+
+    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+        <.form :let={f} for={%{}} action={~p"/home/contacts"} method="post" class="flex gap-2">
+            <input 
+            type="text" 
+            name="contact_username" 
+            placeholder="Nombre de usuario a agregar" 
+            required
+            class="input input-bordered w-full bg-white" 
+            />
+            <button type="submit" class="btn btn-primary">
+            Agregar
+            </button>
+        </.form>
+    </div>
+
+    <%= if @contacts == [] do %>
+        <div class="text-gray-500 text-center py-4 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+        <p>No tienes contactos agregados aún.</p>
+        </div>
+    <% else %>
+    
+        <ul class="flex flex-col space-y-3 w-full">
+    <%= for contact_name <- @contacts do %>
+        <li class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+        
+        <div class="flex items-center gap-3">
+            <div class="bg-blue-100 p-2 rounded-full text-blue-600">
+            </div>
+            <span class="font-semibold text-gray-800"><%= contact_name %></span>
+        </div>
+
+        <.link 
+            href={~p"/home/contacts/#{contact_name}/delete"} 
+            method="post" 
+            data-confirm="¿Estás seguro de eliminar a este contacto?"
+            class="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-full transition-colors"
+            title="Eliminar contacto"
+        >
+            <.icon name="hero-trash" class="w-5 h-5" />
+        </.link>
+        </li>
+    <% end %>
+    </ul>
+        
+    <% end %>
+</div>
+</div>

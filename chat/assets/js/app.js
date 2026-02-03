@@ -1,4 +1,5 @@
 import { Socket } from "phoenix"
+import "phoenix_html"
 
 const socket = new Socket("/socket", { params: { token: "fake-token" } });
 socket.connect();
