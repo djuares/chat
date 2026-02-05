@@ -33,11 +33,15 @@ defmodule ChatWeb.Router do
       post "/messages", GroupMessageController, :create
     end
 
-    #DIRECT MESSAGES
     # DIRECT MESSAGES
     resources "/home/directs", DirectController do
       resources "/messages", DirectMessageController, only: [:create]
     end
+
+    # CONTACTS
+    resources "/home/contacts", ContactsController, only: [:index]
+    post "/home/contacts", ContactsController, :create
+    post "/home/contacts/:contact_username/delete", ContactsController, :delete
 
 
     #Autentication

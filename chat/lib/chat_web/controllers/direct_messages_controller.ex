@@ -21,5 +21,4 @@ defmodule ChatWeb.DirectMessageController do
     redirect(conn, to: ~p"/home/directs/#{direct_id}")
   end
 
-
 end
