@@ -37,3 +37,5 @@ npm-debug.log
 
 # Ignorar los volúmenes de Docker / base de datos
 .volumes/
+
+/_build/
