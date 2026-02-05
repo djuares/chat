@@ -16,9 +16,9 @@ defmodule Chat.User do
     field(:description, :string)
     field(:last_online, :utc_datetime_usec, default: DateTime.utc_now())
 
-    many_to_many :contacts, Chat.User,
-      join_through: Chat.Contacts,
-      join_keys: [user: :username, contact: :username]
+      many_to_many :contacts, Chat.User,
+        join_through: Chat.Contacts,
+        join_keys: [user: :username, contact: :username]
 
     timestamps()
   end
@@ -48,6 +48,34 @@ defmodule Chat.User do
 
   def get_last_online(username) do
     Chat.Repo.get(__MODULE__, username).last_online
+  end
+
+  def create_user(user_params) do
+    changeset(%Chat.User{}, user_params)
+    |> Chat.Repo.insert()
+    |> case do
+      {:ok, _user} -> :ok
+      {:error, changeset} ->
+        errors =
+          changeset.errors
+          |> Enum.map(fn {field, {msg, _}} -> "#{field}: #{msg}" end)
+          |> Enum.join(", ")
+
+        {:error, errors}
+    end
+  end
+
+  def login_user(username, password) do
+    Chat.Repo.get(__MODULE__, username)
+    |> case do
+      nil -> {:error, "Usuario no encontrado"}
+      %Chat.User{} = user ->
+        if user.password == password do
+          {:ok, user}
+        else
+          {:error, "Contraseña incorrecta"}
+        end
+    end
   end
 
   def search(username, query, skip \\ 0, take \\ 10) do
