@@ -1,24 +1,24 @@
-defmodule ChatWeb.GroupMessageController do
+defmodule ChatWeb.DirectMessageController do
   use ChatWeb, :controller
 
   alias Chat.GroupMessages
   alias Chat.Repo
 
   def create(conn, %{
-        "group_id" => group_id,
+        "direct_id" => direct_id,
         "message" => %{"content" => content}
       }) do
     user = conn.assigns.current_user
 
-    %Chat.GroupMessages{}
-    |> Chat.GroupMessages.changeset(%{
-      group_id: group_id,
+    %GroupMessages{}
+    |> GroupMessages.changeset(%{
+      group_id: direct_id,
       sender: user.username,
       content: content
     })
-    |> Chat.Repo.insert()
+    |> Repo.insert()
 
-    redirect(conn, to: ~p"/home/groups/#{group_id}")
+    redirect(conn, to: ~p"/home/directs/#{direct_id}")
   end
 
 
