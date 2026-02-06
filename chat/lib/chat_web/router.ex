@@ -29,7 +29,6 @@ defmodule ChatWeb.Router do
     resources "/home/groups", GroupController do
       post "/members", GroupController, :add_member
       delete "/members/:username", GroupController, :remove_member
-
       post "/messages", GroupMessageController, :create
     end
 

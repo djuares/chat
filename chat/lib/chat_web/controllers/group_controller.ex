@@ -67,6 +67,20 @@ defmodule ChatWeb.GroupController do
     |> redirect(to: ~p"/home/groups/#{group_id}")
   end
 
+  def remove_member(conn, %{"group_id" => group_id, "username" => username}) do
+    {count, _} =
+      from(gm in GroupMember,
+        where:
+          gm.group_id == ^group_id and
+          gm.username == ^username
+      )
+      |> Repo.delete_all()
+
+    conn
+    |> put_flash(:info, "Miembro eliminado correctamente")
+    |> redirect(to: ~p"/home/groups/#{group_id}")
+  end
+
 
 
 end
