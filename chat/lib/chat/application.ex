@@ -15,8 +15,8 @@ defmodule Chat.Application do
        strategy: :one_for_one,
        name: Chat.GroupSupervisor},
 
-      # Endpoint SIEMPRE al final
-      ChatWeb.Endpoint
+      # Endpoint
+      ChatWeb.Endpoint,
     ]
 
     opts = [strategy: :one_for_one, name: Chat.Supervisor]

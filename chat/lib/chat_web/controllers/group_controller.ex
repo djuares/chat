@@ -1,7 +1,7 @@
 defmodule ChatWeb.GroupController do
   use ChatWeb, :controller
 
-  alias Chat.{Repo, Group, GroupMember, GroupMessages}
+  alias Chat.{Repo, Group, GroupMember}
 
   # index
   import Ecto.Query
