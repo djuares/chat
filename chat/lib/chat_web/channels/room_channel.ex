@@ -3,7 +3,7 @@ defmodule ChatWeb.RoomChannel do
 
   @impl true
   def join("room:" <> group_id, _params, socket) do
-    user = socket.assigns.current_user
+    user = socket.assigns[:current_user] || %{id: 1, username: "anon", name: "Anon"}
 
     case Chat.GroupMember.get_membership(group_id, user.username) do
       nil ->

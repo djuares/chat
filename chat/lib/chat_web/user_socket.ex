@@ -4,12 +4,10 @@ defmodule ChatWeb.UserSocket do
   channel "room:*", ChatWeb.RoomChannel
 
   @impl true
-  def connect(%{"token" => token}, socket, _info) do
-    # fake auth para empezar
-    user = %{id: 1, username: "damaris", name: "Damaris"}
+ def connect(_params, socket, _info) do
+  {:ok, socket}
+end
 
-    {:ok, assign(socket, :current_user, user)}
-  end
 
   def id(_socket), do: nil
 end
