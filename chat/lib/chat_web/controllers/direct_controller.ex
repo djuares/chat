@@ -91,4 +91,17 @@ defmodule ChatWeb.DirectController do
     )
   end
 
+    def search(conn, %{"group_id" => group_id, "q" => q}) do
+      group = Repo.get!(Group, group_id)
+      members = GroupMember.get_all_members(group_id)
+      messages = Chat.GroupMessages.search_messages(group_id, q)
+
+      render(conn, ChatWeb.GroupHTML, :show,
+        group: group,
+        members: members,
+        messages: messages,
+        q: q
+      )
+    end
+
 end

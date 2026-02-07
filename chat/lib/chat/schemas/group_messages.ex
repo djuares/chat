@@ -47,4 +47,14 @@ defmodule Chat.GroupMessages do
     )
     |> Chat.Repo.all()
   end
+
+  def search_messages(group_id, q) do
+    from(m in __MODULE__,
+      where: m.group_id == ^group_id and ilike(m.content, ^"%#{q}%"),
+      order_by: [asc: m.inserted_at],
+      preload: [:sender_user]
+    )
+    |> Chat.Repo.all()
+  end
+
 end

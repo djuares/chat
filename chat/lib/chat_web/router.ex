@@ -31,6 +31,7 @@ defmodule ChatWeb.Router do
 
     #GROUPS
     resources "/home/groups", GroupController do
+      get "/search", GroupController, :search
       post "/members", GroupController, :add_member
       delete "/members/:username", GroupController, :remove_member
       post "/messages", GroupMessageController, :create
@@ -43,8 +44,8 @@ defmodule ChatWeb.Router do
 
     # CONTACTS
     resources "/home/contacts", ContactsController, only: [:index]
-    post "/home/contacts", ContactsController, :create
-    post "/home/contacts/:contact_username/delete", ContactsController, :delete
+      post "/home/contacts", ContactsController, :create
+      post "/home/contacts/:contact_username/delete", ContactsController, :delete
 
 
     #Autentication
