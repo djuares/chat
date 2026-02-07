@@ -10,7 +10,16 @@ defmodule Chat.MixProject do
       start_permanent: Mix.env() == :prod,
       compilers: Mix.compilers(),
       deps: deps(),
-      test_coverage: [tool: ExCoveralls],
+      test_coverage: [
+        tool: ExCoveralls,
+        exclude_files: [
+          "chat/lib/chat_web/**",
+        ],
+        ignore_modules: [
+          Chat,
+          Chat.Repo
+        ]
+      ],
       preferred_cli_env: [
         coveralls: :test,
         "coveralls.detail": :test,
