@@ -1,27 +1,15 @@
 defmodule ChatWeb.RoomChannelTest do
-  use ChatWeb.ChannelCase
+    use ChatWeb.ChannelCase, async: true
 
-  setup do
-    {:ok, _, socket} =
-      ChatWeb.UserSocket
-      |> socket("user_id", %{some: :assign})
-      |> subscribe_and_join(ChatWeb.RoomChannel, "room:lobby")
+  test "join does not crash when user is not member" do
+    socket =
+      socket(ChatWeb.UserSocket, nil, %{
+        current_user: %{username: "damaris"}
+      })
 
-    %{socket: socket}
+    assert {:error, %{reason: "not a member of this group"}} =
+             subscribe_and_join(socket, ChatWeb.RoomChannel, "room:group-1")
   end
 
-  test "ping replies with status ok", %{socket: socket} do
-    ref = push(socket, "ping", %{"hello" => "there"})
-    assert_reply ref, :ok, %{"hello" => "there"}
-  end
 
-  test "shout broadcasts to room:lobby", %{socket: socket} do
-    push(socket, "shout", %{"hello" => "all"})
-    assert_broadcast "shout", %{"hello" => "all"}
-  end
-
-  test "broadcasts are pushed to the client", %{socket: socket} do
-    broadcast_from!(socket, "broadcast", %{"some" => "data"})
-    assert_push "broadcast", %{"some" => "data"}
-  end
 end

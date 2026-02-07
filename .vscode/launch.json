@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "mix_task",
+      "name": "Run Tests",
+      "request": "launch",
+      "projectDir": "${workspaceFolder}",
+      "task": "test",
+      "taskArgs": ["--trace"]
+    }
+  ]
+}
