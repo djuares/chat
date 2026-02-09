@@ -9,6 +9,7 @@ defmodule ChatWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug ChatWeb.Plugs.CurrentUser
+    plug :put_user_token
   end
 
   pipeline :api do
@@ -75,6 +76,16 @@ defmodule ChatWeb.Router do
 
       live_dashboard "/dashboard", metrics: ChatWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
+    end
+  end
+
+  defp put_user_token(conn, _) do
+    if current_user = conn.assigns[:current_user] do
+      # Generamos un token firmado con el ID del usuario
+      token = Phoenix.Token.sign(conn, "user socket", current_user.username)
+      assign(conn, :user_token, token)
+    else
+      conn
     end
   end
 end

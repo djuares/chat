@@ -1,34 +1,13 @@
-import { Socket } from "phoenix"
+import {Socket} from "phoenix"
 
-const socket = new Socket("/socket", { params: { token: "fake-token" } });
-socket.connect();
+let socket = new Socket("/socket", {params: {token: window.userToken}})
 
-const channel = socket.channel("room:lobby", {});
-channel.join()
-  .receive("ok", () => console.log("Conectado al lobby"))
-  .receive("error", resp => console.error("Error al conectar", resp));
+socket.connect()
 
-const messages = document.getElementById("messages");
-const input = document.getElementById("message-input");
-const button = document.getElementById("send");
+let statusChannel = socket.channel("status:lobby", {})
 
-// Enviar mensaje al servidor
-button.onclick = () => {
-  if (input.value.trim() === "") return;
-  channel.push("new_msg", { body: input.value });
-  input.value = "";
-};
+statusChannel.join()
+    .receive("ok", resp => { console.log("Joined status channel successfully", resp) })
+    .receive("error", resp => { console.log("Unable to join status channel", resp) })
 
-// Recibir mensaje y agregar burbuja
-channel.on("group:message_reply", payload => {
-  const li = document.createElement("li");
-  li.className = payload.sender === "yo"
-    ? "self-end bg-primary text-primary-content px-4 py-2 rounded-xl max-w-xs break-words"
-    : "self-start bg-secondary text-secondary-content px-4 py-2 rounded-xl max-w-xs break-words";
-  
-  li.innerHTML = `<strong>${payload.sender}:</strong> ${payload.message} <div class="text-xs text-gray-500">${payload.time}</div>`;
-  messages.appendChild(li);
-  
-  // Scroll automático al último mensaje
-  messages.scrollTop = messages.scrollHeight;
-});
+export default socket

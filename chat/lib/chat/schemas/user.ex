@@ -31,15 +31,20 @@ defmodule Chat.User do
     |> unique_constraint([:username, :email])
   end
 
-    def verify_user(username, password) do
-      user = Chat.Repo.get(__MODULE__, username)
+  def verify_user(username, password) do
+    user = Chat.Repo.get(__MODULE__, username)
 
-      cond do
-        user == nil -> raise Unauthorized
-        user.password == password -> user
-        true -> raise Unauthorized
-      end
+    cond do
+      user == nil -> raise Unauthorized
+      user.password == password -> user
+      true -> raise Unauthorized
     end
+  end
+
+  def update_last_online(username) do
+    from(u in __MODULE__, where: u.username == ^username)
+    |> Chat.Repo.update_all(set: [last_online: DateTime.utc_now()])
+  end
 
   def search(username, query, skip \\ 0, take \\ 10) do
     q0 =

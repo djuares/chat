@@ -2,9 +2,36 @@
 <h1 class="text-primary font-bold">💬 Chat directo</h1>
 <br>
 
-<h2 class="font-bold text-base-content">
-  <%= @other_user %>
-</h2>
+<div class="flex items-center gap-4 border-b border-base-200 pb-4 mb-4">
+  <div class = "relative">
+    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+    </div>
+
+    <%= if @other_user.status == :online do %>
+      <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-white rounded-full shadow-sm"></span>
+    <% else %>
+      <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-gray-400 border-2 border-white rounded-full shadow-sm"></span>
+    <% end %>
+  </div>
+
+  <div class="flex flex-col">
+    <h2 class="text-lg font-bold text-base-content leading-tight">
+      <%= @other_user.username %>
+    </h2>
+      
+    <span class="text-xs font-medium text-gray-500">
+      <%= if @other_user.status == :online do %>
+        <span class="text-green-600">En línea</span>
+      <% else %>
+        <%= if @other_user.last_online do %>
+          Última vez: <%= Calendar.strftime(@other_user.last_online, "%d/%m/%Y %H:%M") %>
+        <% else %>
+          Desconectado
+        <% end %>
+      <% end %>
+    </span>
+  </div>
+</div>
 
 <br>
 <hr/>

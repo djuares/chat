@@ -83,7 +83,7 @@ defmodule ChatWeb.DirectController do
       end)
       |> then(fn
         nil -> nil
-        member -> member.username
+        member -> member
       end)
 
 

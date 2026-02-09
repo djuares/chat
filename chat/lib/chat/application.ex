@@ -10,6 +10,9 @@ defmodule Chat.Application do
       # PubSub
       {Phoenix.PubSub, name: Chat.PubSub},
 
+      # Presencia
+      ChatWeb.Presence,
+
       # Supervisor de grupos
       {DynamicSupervisor,
        strategy: :one_for_one,

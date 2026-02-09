@@ -46,10 +46,17 @@ defmodule Chat.GroupMember do
   def get_all_members(group_id) do
     import Ecto.Query
 
+    online_users = ChatWeb.Presence.list("status:lobby") |> Map.keys() |> MapSet.new()
+
     from(m in Chat.GroupMember,
       where: m.group_id == ^group_id
     )
     |> Chat.Repo.all()
+    |> Enum.map(fn member ->
+      last_online = Chat.Repo.get(Chat.User, member.username).last_online
+      status = if MapSet.member?(online_users, member.username), do: :online, else: :offline
+      %{username: member.username, role: member.role, status: status, last_online: last_online}
+    end)
   end
 
 end
