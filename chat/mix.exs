@@ -12,20 +12,20 @@ defmodule Chat.MixProject do
       deps: deps(),
       test_coverage: [
         tool: ExCoveralls,
-        exclude_files: [
-          "chat/lib/chat_web/**",
-        ],
         ignore_modules: [
-          Chat,
-          Chat.Repo
-        ]
+          ChatWeb,           # ignora el módulo principal
+          ChatWeb.Endpoint,
+          ChatWeb.Router,
+          ChatWeb.UserSocket,
+          ChatWeb.PageController,
+          ChatWeb.PageView,
+          ChatWeb.LayoutView,
+          ChatWeb.ErrorHTML,
+          ChatWeb.ErrorJSON,
+          ChatWeb.Plugs.CurrentUser
+          ]
       ],
-      preferred_cli_env: [
-        coveralls: :test,
-        "coveralls.detail": :test,
-        "coveralls.post": :test,
-        "coveralls.html": :test
-      ]
+      aliases: aliases()
     ]
   end
 
@@ -65,7 +65,15 @@ end
 
 defp aliases do
   [
-    setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"]
+    setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
+    "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+    "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
+    "assets.build": ["compile", "tailwind chat", "esbuild chat"],
+    "assets.deploy": [
+        "tailwind chat --minify",
+        "esbuild chat --minify",
+        "phx.digest"
+      ],
   ]
 end
 

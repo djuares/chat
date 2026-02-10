@@ -39,6 +39,7 @@ defmodule ChatWeb.Router do
 
     # DIRECT MESSAGES
     resources "/home/directs", DirectController do
+      get "/search", DirectController, :search
       resources "/messages", DirectMessageController, only: [:create]
     end
 

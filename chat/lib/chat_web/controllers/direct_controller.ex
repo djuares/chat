@@ -91,15 +91,28 @@ defmodule ChatWeb.DirectController do
     )
   end
 
-    def search(conn, %{"group_id" => group_id, "q" => q}) do
+    def search(conn, %{"direct_id" => group_id, "q" => q}) do
       group = Repo.get!(Group, group_id)
       members = GroupMember.get_all_members(group_id)
       messages = Chat.GroupMessages.search_messages(group_id, q)
 
-      render(conn, ChatWeb.GroupHTML, :show,
+      current_username = conn.assigns.current_user.username
+
+      other_user =
+        members
+        |> Enum.find(fn member ->
+          member.username != current_username
+        end)
+        |> then(fn
+          nil -> nil
+          member -> member.username
+        end)
+
+      render(conn, ChatWeb.DirectHTML, :show,
         group: group,
         members: members,
         messages: messages,
+        other_user: other_user,
         q: q
       )
     end
