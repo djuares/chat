@@ -89,7 +89,7 @@ defmodule Chat.ContactsTest do
 
       contacts = Contacts.list_contacts(user.username)
 
-      assert Enum.sort(contacts) == ["bob", "carol"]
+      assert Enum.sort(contacts) ==  [%{status: :offline, username: "bob"}, %{status: :offline, username: "carol"}]
     end
 
     test "returns empty list when user has no contacts" do
