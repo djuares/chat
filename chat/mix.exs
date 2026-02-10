@@ -26,6 +26,7 @@ defmodule Chat.MixProject do
           ]
       ],
       aliases: aliases(),
+      listeners: [Phoenix.CodeReloader]
     ]
   end
 

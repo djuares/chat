@@ -1,5 +1,5 @@
 import {Socket} from "phoenix"
-
+import "phoenix_html"
 let socket = new Socket("/socket", {params: {token: window.userToken}})
 
 socket.connect()

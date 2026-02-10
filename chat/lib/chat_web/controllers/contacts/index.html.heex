@@ -7,7 +7,7 @@
     <h1 class="text-primary text-2xl font-bold">Contactos 👥</h1>
 
     <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-        <.form :let={f} for={%{}} action={~p"/home/contacts"} method="post" class="flex gap-2">
+        <.form for={%{}} action={~p"/home/contacts"} method="post" class="flex gap-2">
             <input 
             type="text" 
             name="contact_username" 
@@ -59,7 +59,7 @@
             class="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-full transition-colors"
             title="Eliminar contacto"
         >
-            <.icon name="hero-trash" class="w-5 h-5" />
+            <span>Eliminar</span>
         </.link>
         </li>
     <% end %>
