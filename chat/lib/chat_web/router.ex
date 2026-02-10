@@ -10,6 +10,7 @@ defmodule ChatWeb.Router do
     plug :put_secure_browser_headers
     plug ChatWeb.Plugs.CurrentUser
     plug :put_user_token
+    plug :set_last_online
   end
 
   pipeline :api do
@@ -25,6 +26,8 @@ defmodule ChatWeb.Router do
     #HOME
     get "/home", HomeController, :index
 
+    #NOTIFICATIONS
+    resources "/home/notifications", NotificationsController, only: [:index, :show]
 
     #GROUPS
     resources "/home/groups", GroupController do
@@ -81,9 +84,19 @@ defmodule ChatWeb.Router do
 
   defp put_user_token(conn, _) do
     if current_user = conn.assigns[:current_user] do
-      # Generamos un token firmado con el ID del usuario
       token = Phoenix.Token.sign(conn, "user socket", current_user.username)
       assign(conn, :user_token, token)
+    else
+      conn
+    end
+  end
+
+  def set_last_online(conn, _opts) do
+    user = conn.assigns[:current_user]
+
+    if user && is_nil(get_session(conn, :last_online)) do
+      last_online = Chat.User.get_last_online(user.username)
+      put_session(conn, :last_online, last_online)
     else
       conn
     end

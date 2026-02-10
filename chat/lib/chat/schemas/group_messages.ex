@@ -34,4 +34,17 @@ defmodule Chat.GroupMessages do
     )
     |> Chat.Repo.all()
   end
+
+  def get_messages_since(group_id, since_datetime) do
+    from(m in __MODULE__,
+      where: m.group_id == ^group_id and m.inserted_at > ^since_datetime,
+      order_by: [asc: m.inserted_at],
+      select: %{
+        sender: m.sender,
+        message: m.content,
+        inserted_at: m.inserted_at
+      }
+    )
+    |> Chat.Repo.all()
+  end
 end

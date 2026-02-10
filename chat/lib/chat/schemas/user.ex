@@ -46,6 +46,10 @@ defmodule Chat.User do
     |> Chat.Repo.update_all(set: [last_online: DateTime.utc_now()])
   end
 
+  def get_last_online(username) do
+    Chat.Repo.get(__MODULE__, username).last_online
+  end
+
   def search(username, query, skip \\ 0, take \\ 10) do
     q0 =
       from(uc in Chat.UserConversations,

@@ -43,6 +43,7 @@ defmodule Chat.GroupMember do
     )
     |> Chat.Repo.delete_all()
   end
+
   def get_all_members(group_id) do
     import Ecto.Query
 
@@ -57,6 +58,16 @@ defmodule Chat.GroupMember do
       status = if MapSet.member?(online_users, member.username), do: :online, else: :offline
       %{username: member.username, role: member.role, status: status, last_online: last_online}
     end)
+  end
+
+  # pre_condition: the group is a direct chat
+  def get_direct_chat_name(username, group_id) do
+    group_id
+    |> get_all_members()
+    |> Enum.map(& &1.username)
+    |> Enum.find(fn member_username ->
+        member_username != username
+      end)
   end
 
 end

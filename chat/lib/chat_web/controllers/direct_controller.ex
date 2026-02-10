@@ -20,12 +20,7 @@ defmodule ChatWeb.DirectController do
       )
       |> Repo.all()
       |> Enum.map(fn group ->
-        other_user =
-          GroupMember.get_all_members(group.id)
-          |> Enum.map(& &1.username)
-          |> Enum.find(fn username ->
-            username != current_username
-          end)
+        other_user = Chat.GroupMember.get_direct_chat_name(current_username, group.id)
 
         %{
           id: group.id,
