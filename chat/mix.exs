@@ -25,7 +25,7 @@ defmodule Chat.MixProject do
           ChatWeb.Plugs.CurrentUser
           ]
       ],
-      aliases: aliases()
+      aliases: aliases(),
     ]
   end
 

@@ -34,13 +34,20 @@ defmodule Chat.Contacts do
   end
 
   def list_contacts(user) do
-    from(c in __MODULE__,
-      where: c.user == ^user,
-      join: u in Chat.User,
-      on: c.contact == u.username,
-      select: %{username: u.username}
-    )
-    |> Chat.Repo.all()
-    |> Enum.map(& &1.username)
+    contacts =
+      from(c in __MODULE__,
+        where: c.user == ^user,
+        join: u in Chat.User,
+        on: c.contact == u.username,
+        select: %{username: u.username}
+      )
+      |> Chat.Repo.all()
+
+    online_users = ChatWeb.Presence.list("status:lobby") |> Map.keys() |> MapSet.new()
+
+    Enum.map(contacts, fn contact ->
+      status = if MapSet.member?(online_users, contact.username), do: :online, else: :offline
+      Map.put(contact, :status, status)
+    end)
   end
 end

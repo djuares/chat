@@ -10,6 +10,10 @@
 
   <!-- JS -->
   <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}></script>
+  
+  <script>
+    window.userToken = "<%= assigns[:user_token] %>";
+  </script>
 </head>
 
 <body>

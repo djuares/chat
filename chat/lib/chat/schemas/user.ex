@@ -63,6 +63,16 @@ defmodule Chat.User do
         else
           {:error, "Contraseña incorrecta"}
         end
+      end
     end
+
+  def get_last_online(username) do
+    Chat.Repo.get(__MODULE__, username).last_online
   end
+
+  def update_last_online(username) do
+    from(u in __MODULE__, where: u.username == ^username)
+    |> Chat.Repo.update_all(set: [last_online: DateTime.utc_now()])
+  end
+
 end

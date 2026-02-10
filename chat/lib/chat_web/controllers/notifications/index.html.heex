@@ -1,0 +1,24 @@
+<br>
+<h1 class="text-primary font-bold">Notificaciones 🔔</h1>
+<br>
+
+<%= if @notifications == [] do %>
+  <p>No tienes mensajes nuevos.</p>
+<% else %>
+  <ul class="flex flex-col space-y-3 mt-4 w-full">
+    <%= for chat <- @notifications do %>
+      <li class="border rounded shadow-sm bg-white overflow-hidden hover:bg-gray-50 transition-colors">
+        
+        <.link href={~p"/home/notifications/#{chat.id}"} class="block p-4 w-full h-full">
+          
+          <span class="font-bold"><%= chat.name %></span>
+          <br>
+          <span class="text-sm text-gray-500">
+            <%= chat.unread_count %> mensajes nuevos
+          </span>
+
+        </.link>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
