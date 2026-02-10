@@ -156,15 +156,6 @@ defmodule Chat.UserGroup do
     Chat.Repo.insert!(message)
   end
 
-  @impl true
-  def terminate(reason, %{"info" => group}) do
-    if reason != :normal do
-      Chat.GroupSuperVisor.create(group)
-    end
-
-    :ok
-  end
-
   ## Starts the server if the app was restarted
   defp start_server(group_id) do
     if :syn.whereis(group_id) == :undefined do
@@ -230,9 +221,5 @@ defmodule Chat.UserGroup do
   @spec delete(%Chat.Group{}) :: term()
   def delete(group) do
     cast(via_tuple(group.id), {:delete})
-  end
-
-  def publish_info(group_id, info) do
-    call(via_tuple(group_id), {:info, info})
   end
 end
