@@ -59,7 +59,11 @@ defmodule Chat.User do
           |> Enum.join(", ")
 
         {:error, errors}
+      end
     end
+
+  def get_last_online(username) do
+    Chat.Repo.get(__MODULE__, username).last_online
   end
 
   def login_user(username, password) do
