@@ -25,7 +25,8 @@ defmodule Chat.MixProject do
           ChatWeb.Plugs.CurrentUser
           ]
       ],
-      aliases: aliases()
+      aliases: aliases(),
+      listeners: [Phoenix.CodeReloader]
     ]
   end
 
