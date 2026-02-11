@@ -18,7 +18,8 @@ config :chat, Chat.Repo,
 config :chat, ChatWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
   secret_key_base: "+5uGdNFX0SNbVwzOLdTR34lzFr/a6bw7YGM9+XwZb2Ogtni1JJfyUj06YyTUhdgf",
-  server: false
+  server: false,
+  live_reload: false
 
 # In test we don't send emails
 config :chat, Chat.Mailer, adapter: Swoosh.Adapters.Test

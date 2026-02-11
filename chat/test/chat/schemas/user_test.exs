@@ -99,16 +99,25 @@ defmodule Chat.UserTest do
 
   describe "update_last_online/1" do
     setup do
-      User.create_user(@valid_params)
-      :ok
+      user =
+        Repo.insert!(%User{
+          username: "damaris",
+          last_online: DateTime.utc_now()
+        })
+
+      %{user: user}
     end
 
-    test "updates last_online timestamp" do
-      old_timestamp = User.get_last_online(@valid_params.username)
-      :timer.sleep(1000) # Asegura que el nuevo timestamp sea diferente
-      User.update_last_online(@valid_params.username)
-      new_timestamp = User.get_last_online(@valid_params.username)
-      assert new_timestamp > old_timestamp
+    test "updates last_online timestamp", %{user: user} do
+      old_timestamp = User.get_last_online(user.username)
+
+      :timer.sleep(1000) # aseguramos diferencia visible
+
+      User.update_last_online(user.username)
+
+      new_timestamp = User.get_last_online(user.username)
+
+      assert DateTime.compare(new_timestamp, old_timestamp) == :gt
     end
   end
 
