@@ -2,8 +2,6 @@ defmodule Chat.GroupTest do
   use Chat.DataCase, async: true  # usa tu DataCase que configura sandbox
   alias Chat.{Group, GroupMember}
 
-  import Ecto.Query
-
   describe "create!/2" do
       test "crea un grupo y agrega al creador como admin" do
         # Primero creamos el usuario en la DB
@@ -25,7 +23,7 @@ defmodule Chat.GroupTest do
         assert Repo.get(Group, group.id)
 
         # Verificar que el usuario fue agregado como admin
-        member = Repo.get_by(Chat.GroupMember, group_id: group.id, username: user.username)
+        member = Repo.get_by(GroupMember, group_id: group.id, username: user.username)
         assert member.role == "admin"
       end
 

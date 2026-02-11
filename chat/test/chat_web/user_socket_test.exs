@@ -1,4 +1,4 @@
-defmodule ChatWeb.UserSocket do
+defmodule ChatWeb.UserSocketTest do
   use Phoenix.Socket
 
   alias Chat.Repo

@@ -16,7 +16,7 @@ defmodule Chat.UserGroupTest do
   end
 
   describe "init/1" do
-    test "carga los miembros del grupo en el estado inicial", %{group: group, member: member} do
+    test "carga los miembros del grupo en el estado inicial", %{group: group} do
       # Iniciamos el GenServer sin usar :syn
       {:ok, pid} = GenServer.start_link(UserGroup, [group])
 

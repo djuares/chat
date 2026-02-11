@@ -3,8 +3,6 @@ defmodule Chat.UserTest do
   alias Chat.User
   alias Chat.Repo
 
-  import Ecto.Query
-
   # Esto asegura que cada test use un sandbox y no afecte la DB real
   setup do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
@@ -71,15 +69,11 @@ defmodule Chat.UserTest do
     end
 
     test "raises error when username is wrong" do
-      assert_raise UndefinedFunctionError, fn ->
-        User.verify_user("wronguser", "123456")
-      end
+      assert {:error, "Usuario no encontrado"} = User.verify_user("wronguser", "123456")
     end
 
     test "raises error when password is wrong" do
-      assert_raise UndefinedFunctionError, fn ->
-        User.verify_user(@valid_params.username, "wrongpassword")
-      end
+      assert {:error, "Contraseña incorrecta"} = User.verify_user(@valid_params.username, "wrongpassword")
     end
   end
 
