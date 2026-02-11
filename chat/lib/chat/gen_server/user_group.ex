@@ -139,7 +139,7 @@ defmodule Chat.UserGroup do
       Enum.filter(members, fn member -> member.connection != nil end)
       |> Enum.map(& &1.connection)
 
-    Manifold.send(online_users, info)
+    Enum.each(online_users, fn pid -> send(pid, info) end)
   end
 
   defp send_message(group, members, info) do
@@ -158,9 +158,9 @@ defmodule Chat.UserGroup do
 
   ## Starts the server if the app was restarted
   defp start_server(group_id) do
-    if :syn.whereis(group_id) == :undefined do
+    if :syn.whereis_name(group_id) == :undefined do
       group = Chat.Repo.get!(Chat.Group, group_id)
-      Chat.GroupSuperVisor.create(group)
+      Chat.Supervisor.GroupSupervisor.create(group)
     end
   end
 

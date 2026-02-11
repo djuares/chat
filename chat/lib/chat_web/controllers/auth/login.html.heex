@@ -10,9 +10,9 @@
     </h1>
 
     <!-- Flash de error -->
-    <%= if live_flash(@flash, :error) do %>
+    <%= if Phoenix.Flash.get(@flash, :error) do %>
       <div class="bg-red-100 text-red-800 px-4 py-2 rounded mb-4">
-        <%= live_flash(@flash, :error) %>
+        <%= Phoenix.Flash.get(@flash, :error) %>
       </div>
     <% end %>
 

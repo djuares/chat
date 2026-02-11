@@ -21,14 +21,14 @@ defmodule ChatWeb.GroupController do
       |> Repo.all()
 
 
-    render(conn, ChatWeb.GroupHTML, :index, groups: groups)
+    render(conn, :index, groups: groups)
   end
 
 
   # new
   def new(conn, _params) do
     changeset = Group.changeset(%Group{}, %{})
-    render(conn, ChatWeb.GroupHTML, :new, changeset: changeset)
+    render(conn, :new, changeset: changeset)
   end
 
   # create
@@ -48,7 +48,7 @@ defmodule ChatWeb.GroupController do
     members = GroupMember.get_all_members(group.id)
     messages = Chat.GroupMessages.list_messages(group.id)
 
-    render(conn, ChatWeb.GroupHTML, :show,
+    render(conn, :show,
       group: group,
       members: members,
       messages: messages
@@ -68,13 +68,13 @@ defmodule ChatWeb.GroupController do
   end
 
   def remove_member(conn, %{"group_id" => group_id, "username" => username}) do
-    {count, _} =
-      from(gm in GroupMember,
-        where:
-          gm.group_id == ^group_id and
-          gm.username == ^username
-      )
-      |> Repo.delete_all()
+
+    from(gm in GroupMember,
+      where:
+        gm.group_id == ^group_id and
+        gm.username == ^username
+    )
+    |> Repo.delete_all()
 
     conn
     |> put_flash(:info, "Miembro eliminado correctamente")
@@ -86,7 +86,7 @@ defmodule ChatWeb.GroupController do
     members = GroupMember.get_all_members(group_id)
     messages = Chat.GroupMessages.search_messages(group_id, q)
 
-    render(conn, ChatWeb.GroupHTML, :show,
+    render(conn, :show,
       group: group,
       members: members,
       messages: messages,

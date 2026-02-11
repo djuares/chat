@@ -32,9 +32,9 @@ defmodule Chat.User do
     user = Chat.Repo.get(__MODULE__, username)
 
     cond do
-      user == nil -> raise Unauthorized
-      user.password == password -> user
-      true -> raise Unauthorized
+      user == nil -> {:error, "Usuario no encontrado"}
+      user.password == password -> {:ok, user}
+      true -> {:error, "Contraseña incorrecta"}
     end
   end
 

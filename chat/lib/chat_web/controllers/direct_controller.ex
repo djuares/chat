@@ -35,7 +35,7 @@ defmodule ChatWeb.DirectController do
   # new
   def new(conn, _params) do
     changeset = Group.changeset(%Group{}, %{})
-    render(conn, ChatWeb.DirectHTML, :new, changeset: changeset)
+    render(conn, :new, changeset: changeset)
   end
 
   # create
@@ -108,7 +108,7 @@ defmodule ChatWeb.DirectController do
           member -> member.username
         end)
 
-      render(conn, ChatWeb.DirectHTML, :show,
+      render(conn, :show,
         group: group,
         members: members,
         messages: messages,
