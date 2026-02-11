@@ -7,8 +7,10 @@ defmodule ChatWeb.StatusChannel do
   end
 
   def terminate(_reason, socket) do
-    socket.assigns.current_user.username
-    |> Chat.User.update_last_online()
+    username = socket.assigns.current_user.username
+
+    ChatWeb.Presence.untrack(socket, username)
+    Chat.User.update_last_online(username)
   end
 
   def handle_info(:after_join, socket) do
