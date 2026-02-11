@@ -103,6 +103,33 @@ defmodule Chat.UserTest do
     end
   end
 
+  describe "update_last_online/1" do
+    setup do
+      User.create_user(@valid_params)
+      :ok
+    end
+
+    test "updates last_online timestamp" do
+      old_timestamp = User.get_last_online(@valid_params.username)
+      :timer.sleep(1000) # Asegura que el nuevo timestamp sea diferente
+      User.update_last_online(@valid_params.username)
+      new_timestamp = User.get_last_online(@valid_params.username)
+      assert new_timestamp > old_timestamp
+    end
+  end
+
+  describe "get_last_online/1" do
+    setup do
+      User.create_user(@valid_params)
+      :ok
+    end
+
+    test "returns the last_online timestamp" do
+      timestamp = User.get_last_online(@valid_params.username)
+      assert timestamp != nil
+    end
+  end
+
   # Helper para extraer errores del changeset
   defp errors_on(changeset) do
     Ecto.Changeset.traverse_errors(changeset, fn {msg, _opts} -> msg end)

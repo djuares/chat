@@ -116,4 +116,30 @@ defmodule Chat.GroupMessagesTest do
       assert results == []
     end
   end
+
+  describe "get_messages_since/2" do
+    test "devuelve mensajes posteriores a una fecha dada" do
+      group = insert_group()
+      user  = insert_user()
+
+      Repo.insert!(%GroupMessages{
+        content: "mensaje viejo",
+        group_id: group.id,
+        sender: user.username,
+        inserted_at: ~N[2024-01-01 00:00:00]
+      })
+
+      Repo.insert!(%GroupMessages{
+        content: "mensaje nuevo",
+        group_id: group.id,
+        sender: user.username,
+        inserted_at: ~N[2024-02-01 00:00:00]
+      })
+
+      results = GroupMessages.get_messages_since(group.id, ~N[2024-01-15 00:00:00])
+
+      assert length(results) == 1
+      assert hd(results).message == "mensaje nuevo"
+    end
+  end
 end

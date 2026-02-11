@@ -14,7 +14,7 @@ defmodule Chat.UserGroup do
 
   @impl true
   def handle_call({:add, %Chat.GroupMember{} = member}, _from, %{"members" => members} = state) do
-    Phoenix.PubSub.broadcast!(:chat, member.user_id, %{
+    Phoenix.PubSub.broadcast!(:chat, member.username, %{
       "event" => "group:join",
       "membership" => member
     })
@@ -35,7 +35,7 @@ defmodule Chat.UserGroup do
     })
 
     {:reply, :ok,
-     %{state | "members" => Enum.reject(members, &(&1.user.user_id === member.user_id))}}
+     %{state | "members" => Enum.reject(members, &(&1.user.username === member.username))}}
   end
 
   @impl true
@@ -44,7 +44,7 @@ defmodule Chat.UserGroup do
         _from,
         %{"members" => members, "info" => group} = state
       ) do
-    idx = Enum.find_index(members, &(&1.user.user_id == member.user_id))
+    idx = Enum.find_index(members, &(&1.user.username == member.username))
 
     members =
       if idx != nil,
@@ -52,9 +52,9 @@ defmodule Chat.UserGroup do
         else: members
 
     # Deliver pending message to the user
-    user = Chat.Repo.get(Chat.User, member.user_id)
+    user = Chat.Repo.get(Chat.User, member.username)
 
-    Chat.GroupMessages.get_messages(group.id, user.username, user.last_online)
+    Chat.GroupMessages.get_messages_since(group.id, user.last_online)
     |> Enum.each(fn entry ->
       send(socket, %{
         "event" => "group:message_reply",
@@ -75,7 +75,7 @@ defmodule Chat.UserGroup do
         _from,
         %{"members" => members} = state
       ) do
-    idx = Enum.find_index(members, &(&1.user.user_id == member.user_id))
+    idx = Enum.find_index(members, &(&1.user.username == member.username))
 
     members =
       if idx != nil,
@@ -108,7 +108,7 @@ defmodule Chat.UserGroup do
   def handle_cast({:start}, %{"members" => members} = state) do
     Enum.each(
       members,
-      &Phoenix.PubSub.broadcast!(:chat, &1.user.user_id, %{
+      &Phoenix.PubSub.broadcast!(:chat, &1.user.username, %{
         "event" => "group:join",
         "membership" => &1.user
       })
@@ -147,9 +147,9 @@ defmodule Chat.UserGroup do
 
     message =
       Chat.GroupMessages.changeset(%Chat.GroupMessages{}, %{
-        "sender_id" => sender,
+        "sender" => sender,
         "group_id" => group.id,
-        "message" => Map.get(info, "message")
+        "content" => Map.get(info, "message")
       })
 
     broadcast(members, info)

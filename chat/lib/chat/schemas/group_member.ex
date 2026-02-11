@@ -17,7 +17,7 @@ defmodule Chat.GroupMember do
     member
     |> cast(attrs, [:group_id, :username, :role])
     |> validate_required([:group_id, :username])
-    |> unique_constraint([:group_id, :username])
+    |> unique_constraint([:group_id, :username], name: :group_members_pkey)
   end
 
   def add_membership(group_id, username, role \\ "member") do
