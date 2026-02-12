@@ -104,13 +104,23 @@ defmodule ChatWeb.GroupControllerTest do
 
   describe "show/2" do
     test "muestra un grupo", %{conn: conn} do
+      user = Repo.insert!(%User{
+        username: "testuser",
+        name: "Test User",
+        password: "password"
+      })
+
       group =
         Repo.insert!(%Group{
           id: "grupo-show",
           name: "Grupo Show"
         })
 
-      conn = get(conn, ~p"/home/groups/#{group.id}")
+      conn =
+        conn
+        |> init_test_session(%{})
+        |> put_session(:current_user, user.username)
+        |> get(~p"/home/groups/#{group.id}")
 
       assert html_response(conn, 200) =~ "Grupo Show"
     end
@@ -170,6 +180,12 @@ defmodule ChatWeb.GroupControllerTest do
 
   describe "search/2" do
     test "renderiza búsqueda", %{conn: conn} do
+      user = Repo.insert!(%User{
+        username: "testuser2",
+        name: "Test User 2",
+        password: "password"
+      })
+
       group =
         Repo.insert!(%Group{
           id: "grupo-search",
@@ -177,7 +193,10 @@ defmodule ChatWeb.GroupControllerTest do
         })
 
       conn =
-        get(conn, ~p"/home/groups/#{group.id}/search?q=hola")
+        conn
+        |> init_test_session(%{})
+        |> put_session(:current_user, user.username)
+        |> get(~p"/home/groups/#{group.id}/search?q=hola")
 
       assert html_response(conn, 200)
     end
