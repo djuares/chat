@@ -9,11 +9,11 @@
   <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"}>
 
   <!-- JS -->
-  <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}></script>
-  
   <script>
     window.userToken = "<%= assigns[:user_token] %>";
   </script>
+  
+  <script phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}></script>
 </head>
 
 <body>

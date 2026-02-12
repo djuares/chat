@@ -88,14 +88,20 @@
 <hr/>
 <div id="messages" class="msg-box font-sans space-y-2">
   <%= for msg <- @messages do %>
-    <div class="bg-white p-2 rounded shadow-sm w-full">
-      <p class="text-base text-base-content">
+    <div class={[
+      "chat",
+      if(msg.sender == @current_user.username, do: "chat-end", else: "chat-start")
+    ]}>
+      <div class={[
+        "chat-bubble",
+        if(msg.sender == @current_user.username, do: "chat-bubble-primary", else: "chat-bubble-secondary")
+      ]}>
         <strong><%= msg.sender_user.username %>:</strong>
         <%= msg.content %>
-      </p>
-      <small class="text-sm text-gray-500 block mt-1">
-        (<%= msg.inserted_at %>)
-      </small>
+        <small class="block text-xs opacity-70 mt-1">
+          <%= msg.inserted_at %>
+        </small>
+      </div>
     </div>
   <% end %>
 </div>
@@ -103,19 +109,23 @@
 <hr/>
 <br>
 
-<.form for={%{}} action={~p"/home/groups/#{@group.id}/messages"} method="post" class="space-y-2">
+<div 
+  id="chat-container"
+  data-group-id={@group.id}
+  data-username={@current_user.username}
+>
+  <form id="message-form" class="space-y-2">
+    <textarea
+      id="message-input"
+      required
+      class="input bg-base-200 text-base-content w-full"
+      placeholder="Escribí tu mensaje..."
+    ></textarea>
 
-  <textarea
-    name="message[content]"
-    required
-    class="input bg-base-200 text-base-content w-full"
-    placeholder="Escribe tu mensaje..."
-  ></textarea>
-  <!-- Botón ocupa toda la línea -->
-  <div class="form-control mt-2">
-    <button type="submit" class="btn w-full bg-primary text-primary-content">
-      Enviar
-    </button>
-  </div>
-
-</.form>
+    <div class="form-control mt-2">
+      <button type="submit" class="btn w-full bg-primary text-primary-content">
+        Enviar
+      </button>
+    </div>
+  </form>
+</div>

@@ -2,7 +2,7 @@ defmodule Chat.UserGroup do
   use GenServer
 
   defp via_tuple(group_id) do
-    {:via, :syn, group_id}
+    {:via, Registry, {Registry.ChatGroups, group_id}}
   end
 
   def start_link(%Chat.Group{} = group) do
@@ -14,7 +14,7 @@ defmodule Chat.UserGroup do
 
   @impl true
   def handle_call({:add, %Chat.GroupMember{} = member}, _from, %{"members" => members} = state) do
-    Phoenix.PubSub.broadcast!(:chat, member.username, %{
+    Phoenix.PubSub.broadcast!(Chat.PubSub, member.username, %{
       "event" => "group:join",
       "membership" => member
     })
@@ -89,18 +89,16 @@ defmodule Chat.UserGroup do
   def handle_call(
         {:message, message, sender},
         _from,
-        %{"info" => group, "members" => members} = state
+        %{"info" => group} = state
       ) do
-    message = %{
-      "event" => "group:message_reply",
-      "message" => message,
-      "sender" => sender.username,
-      "group" => group.id,
-      "timestamp" => DateTime.utc_now(),
-      "name" => sender.name
+
+    message_info = %{
+      content: message,
+      sender: sender,
+      group_id: group.id
     }
 
-    send_message(group, members, message)
+    send_message(message_info)
     {:reply, :ok, state}
   end
 
@@ -108,7 +106,7 @@ defmodule Chat.UserGroup do
   def handle_cast({:start}, %{"members" => members} = state) do
     Enum.each(
       members,
-      &Phoenix.PubSub.broadcast!(:chat, &1.user.username, %{
+      &Phoenix.PubSub.broadcast!(Chat.PubSub, &1.user.username, %{
         "event" => "group:join",
         "membership" => &1.user
       })
@@ -142,40 +140,39 @@ defmodule Chat.UserGroup do
     Enum.each(online_users, fn pid -> send(pid, info) end)
   end
 
-  defp send_message(group, members, info) do
-    sender = Map.get(info, "sender")
-
-    message =
-      Chat.GroupMessages.changeset(%Chat.GroupMessages{}, %{
-        "sender" => sender,
-        "group_id" => group.id,
-        "content" => Map.get(info, "message")
-      })
-
-    broadcast(members, info)
-    Chat.Repo.insert!(message)
+  defp send_message(message_info) do
+    Chat.GroupMessages.changeset(%Chat.GroupMessages{}, %{
+      "sender" => message_info.sender,
+      "group_id" => message_info.group_id,
+      "content" => message_info.content
+    })
+    |> Chat.Repo.insert!()
+    # broadcast(members, info)
   end
 
   ## Starts the server if the app was restarted
   defp start_server(group_id) do
-    if :syn.whereis_name(group_id) == :undefined do
-      group = Chat.Repo.get!(Chat.Group, group_id)
-      Chat.Supervisor.GroupSupervisor.create(group)
+    case Registry.lookup(Registry.ChatGroups, group_id) do
+      [] ->
+        group = Chat.Repo.get!(Chat.Group, group_id)
+        DynamicSupervisor.start_child(Chat.GroupSupervisor, {Chat.UserGroup, group})
+      [{_pid, _}] ->
+        :ok
     end
   end
 
-  defp call(tup, args) do
-    elem(tup, 2)
-    |> start_server()
+  defp call(via_tuple, args) do
+    {_registry_name, group_id} = elem(via_tuple, 2)
+    start_server(group_id)
 
-    GenServer.call(tup, args)
+    GenServer.call(via_tuple, args)
   end
 
-  defp cast(tup, args) do
-    elem(tup, 2)
-    |> start_server()
+  defp cast(via_tuple, args) do
+    {_registry_name, group_id} = elem(via_tuple, 2)
+    start_server(group_id)
 
-    GenServer.cast(tup, args)
+    GenServer.cast(via_tuple, args)
   end
 
   @spec message(String.t(), String.t(), String.t()) :: term()

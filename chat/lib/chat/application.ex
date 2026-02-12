@@ -13,6 +13,9 @@ defmodule Chat.Application do
       # Presencia
       ChatWeb.Presence,
 
+      # Registry para UserGroups
+      {Registry, keys: :unique, name: Registry.ChatGroups},
+
       # Supervisor de grupos
       {DynamicSupervisor,
        strategy: :one_for_one,
