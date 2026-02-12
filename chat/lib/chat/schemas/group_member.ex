@@ -18,6 +18,7 @@ defmodule Chat.GroupMember do
     |> cast(attrs, [:group_id, :username, :role])
     |> validate_required([:group_id, :username])
     |> unique_constraint([:group_id, :username], name: :group_members_pkey)
+    |> foreign_key_constraint(:username, name: "group_members_username_fkey", message: "El usuario no existe en la base de datos")
   end
 
   def add_membership(group_id, username, role \\ "member") do

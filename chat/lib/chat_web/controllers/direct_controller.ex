@@ -2,7 +2,7 @@ defmodule ChatWeb.DirectController do
   use ChatWeb, :controller
 
   import Ecto.Query
-  alias Chat.{Repo, Group, GroupMember}
+  alias Chat.{Repo, Group, GroupMember, User}
 
   # index
   def index(conn, _params) do
@@ -41,26 +41,36 @@ defmodule ChatWeb.DirectController do
   # create
   def create(conn, %{"group" => %{"name" => recipient}}) do
     sender = conn.assigns.current_user.username
-    group_id = Nanoid.generate()
 
-    group =
-      %Chat.Group{}
-      |> Chat.Group.changeset(%{
-        "id" => group_id,
-        "name" => "#{sender}-#{recipient}",
-        "description" => "direct"
-      })
-      |> Chat.Repo.insert!()
+    # Verificar que el usuario destinatario existe
+    case Repo.get(User, recipient) do
+      nil ->
+        conn
+        |> put_flash(:error, "El usuario '#{recipient}' no existe")
+        |> redirect(to: ~p"/home/directs/")
 
-    # creador
-    Chat.GroupMember.add_membership(group.id, sender, "admin")
+      _user ->
+        group_id = Nanoid.generate()
 
-    # destinatario
-    Chat.GroupMember.add_membership(group.id, recipient, "member")
+        group =
+          %Chat.Group{}
+          |> Chat.Group.changeset(%{
+            "id" => group_id,
+            "name" => "#{sender}-#{recipient}",
+            "description" => "direct"
+          })
+          |> Chat.Repo.insert!()
 
-    conn
-    |> put_flash(:info, "Chat directo creado")
-    |> redirect(to: ~p"/home/directs")
+        # creador
+        Chat.GroupMember.add_membership(group.id, sender, "admin")
+
+        # destinatario
+        Chat.GroupMember.add_membership(group.id, recipient, "member")
+
+        conn
+        |> put_flash(:info, "Chat directo creado")
+        |> redirect(to: ~p"/home/directs")
+    end
   end
 
   # show
