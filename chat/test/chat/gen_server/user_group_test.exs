@@ -58,7 +58,7 @@ defmodule Chat.UserGroupTest do
       _ = :sys.get_state(pid)
 
       # Enviamos un mensaje directamente al GenServer
-      assert :ok = GenServer.call(pid, {:message, "¡Hola mundo!", user})
+      assert :ok = GenServer.call(pid, {:message, "¡Hola mundo!", user.username})
 
 
       messages = GroupMessages.list_messages(group.id)
@@ -75,9 +75,9 @@ defmodule Chat.UserGroupTest do
       _ = :sys.get_state(pid)
 
       # Enviamos múltiples mensajes
-      assert :ok = GenServer.call(pid, {:message, "Primer mensaje", user})
-      assert :ok = GenServer.call(pid, {:message, "Segundo mensaje", user})
-      assert :ok = GenServer.call(pid, {:message, "Tercer mensaje", user})
+      assert :ok = GenServer.call(pid, {:message, "Primer mensaje", user.username})
+      assert :ok = GenServer.call(pid, {:message, "Segundo mensaje", user.username})
+      assert :ok = GenServer.call(pid, {:message, "Tercer mensaje", user.username})
 
       # Verificamos el orden
       messages = GroupMessages.list_messages(group.id)

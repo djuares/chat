@@ -60,8 +60,7 @@ defp deps do
     {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
     {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
     {:nanoid, "~> 2.1"},
-    {:excoveralls, "~> 0.18.5", only: [:test, :dev]},
-    {:syn, "~> 3.3.0"}
+    {:excoveralls, "~> 0.18.5", only: [:test, :dev]}
     ]
 end
 
